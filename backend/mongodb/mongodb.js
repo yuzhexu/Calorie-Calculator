@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import mongoose from "mongoose";
+import moment from "moment";
 const { mongoURI } = config().parsed;
 
 //opens DB connection
@@ -22,13 +23,14 @@ mongoose.connect(mongoURI, {
 
 export const addItem = async (payload, model) => {
   connectDB();
-  const { mealItem, mealQty, mealCals, mealProtein, userId } = payload;
+  const { mealItem, mealQty, mealCals, mealProtein, userId, date } = payload;
   const newMealItem = new model({
     mealItem,
     mealQty,
     mealCals,
     mealProtein,
     userId,
+    date,
   });
   try {
     await newMealItem.save();
@@ -40,10 +42,10 @@ export const addItem = async (payload, model) => {
 /*
  * gets meal items from DB
  */
-export const getItems = async (model, userId) => {
+export const getItems = async (model, userId, date) => {
   connectDB();
   try {
-    const meals = await model.find({ userId });
+    const meals = await model.find({ userId, date });
     return meals;
   } catch (err) {
     console.log(err);
@@ -69,7 +71,7 @@ export const clearItems = async (model) => {
 export const removeItem = async (id, model) => {
   connectDB();
   try {
-    await model.remove({ _id: id });
+    await model.deleteOne({ _id: id });
   } catch (err) {
     console.log(err);
   }
@@ -143,15 +145,47 @@ export const signUp = async (credentials, model) => {
  */
 export const editItem = async (payload, model) => {
   connectDB();
-  const { idToEdit: _id, mealItem, mealQty, mealCals, mealProtein } = payload;
+  const { idToEdit: _id, mealItem, mealQty, mealCals, mealProtein} = payload;
   try {
     await model.findOneAndUpdate(
-      { _id },
-      { mealItem, mealQty, mealCals, mealProtein }
+      { _id},
+      { mealItem, mealQty, mealCals, mealProtein },
+      {new: true}
     );
   } catch (err) {
     console.log(err);
   }
 };
 
+/*
+ * weekly calorie summary
+ */
+export const getWeeklySummary = async (model, userId) => {
+  connectDB();
+
+  const startOfWeek = moment().startOf("week").toISOString().substring(0, 10);
+  const endOfWeek = moment().endOf("week").toISOString().substring(0, 10);
+
+  console.log("Start of week:", startOfWeek);
+  console.log("End of week:", endOfWeek);
+  try {
+    const meals = await model.find({
+      userId,
+      date: { $gte: startOfWeek, $lte: endOfWeek },
+    });
+    console.log("Meals:", meals);
+
+    const dailyTotals = Array(7).fill(0);
+
+    meals.forEach((meal) => {
+      const dayOfWeek = moment(meal.date).day();
+      dailyTotals[dayOfWeek] += meal.mealCals;
+    });
+    console.log("Daily totals:", dailyTotals);
+    return dailyTotals;
+
+  } catch (err) {
+    console.log(err);
+  }
+};
     

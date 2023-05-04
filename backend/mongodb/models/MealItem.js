@@ -9,6 +9,7 @@ const MealItemSchema = {
   mealQty: Number,
   mealCals: Number,
   mealProtein: Number,
+  date: String,
 };
 
 //export the model and define table for mongoDB Atlas

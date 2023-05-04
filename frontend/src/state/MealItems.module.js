@@ -11,6 +11,9 @@ export const MealItemsContext = createContext();
 export const MealItemsProvider = ({ children }) => {
   //user id
   const { userId } = useContext(UserContext);
+  // date
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   //state
   const [meals, setMeals] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,9 +24,9 @@ export const MealItemsProvider = ({ children }) => {
   const [idToEdit, setId] = useState(null);
 
 
-  const fetchItems = async () => {
+  const fetchItems = async (date) => {
     setIsLoading(true);
-    const items = await getData('http://localhost:4000/meals');
+    const items = await getData(`http://localhost:4000/meals?date=${date}`);
     setIsLoading(false);
     setMeals(items);
   };
@@ -51,12 +54,13 @@ export const MealItemsProvider = ({ children }) => {
   };
 
   const editItem = (itemToEdit) => {
-    const { _id, mealItem, mealQty, mealCals, mealProtein } = itemToEdit;
+    const { _id, mealItem, mealQty, mealCals, mealProtein,} = itemToEdit;
     setMealItem(mealItem);
     setMealQty(mealQty);
     setMealCals(mealCals);
     setProtein(mealProtein);
     setId(_id);
+    
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -67,6 +71,7 @@ export const MealItemsProvider = ({ children }) => {
 
   const saveEditMeal = async () => {
     const editItem = processMealInput();
+    
     editItem.idToEdit = idToEdit;
     await postData("http://localhost:4000/edit/meal", editItem);
     await fetchItems();
@@ -76,12 +81,10 @@ export const MealItemsProvider = ({ children }) => {
   const saveMeal = async () => {
     const newMealItem = processMealInput();
     newMealItem.userId = userId;
+    newMealItem.date = selectedDate.toISOString().substring(0, 10);
     if (newMealItem) {
-      await postData(
-        "http://localhost:4000/meals",
-        newMealItem
-      );
-      await fetchItems();
+      await postData("http://localhost:4000/meals",newMealItem);
+      await fetchItems(selectedDate);
     }
   };
 
@@ -104,8 +107,8 @@ export const MealItemsProvider = ({ children }) => {
 
 
   useEffect(() => {
-    fetchItems();
-  }, []);
+    fetchItems(selectedDate.toISOString().substring(0, 10));
+  }, [selectedDate]);
 
   return (
     <MealItemsContext.Provider
@@ -131,6 +134,8 @@ export const MealItemsProvider = ({ children }) => {
         mealCals,
         setMealCals,
         setMeals,
+        selectedDate,
+        setSelectedDate,
       }}
     >
       {children}

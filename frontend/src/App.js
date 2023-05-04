@@ -13,6 +13,10 @@ import { ProfilePage } from "./pages/Profile.page";
 import { LogOut } from "./pages/LogOut.page";
 import { NotFoundPage as NotFound } from "./pages/NotFound.page";
 import { Test as TestPage } from "./pages/Test.page";
+import WeeklySummary from "./pages/WeeklySummary";
+
+
+<Route path="/weekly-summary" component={WeeklySummary} />
 
 function App() {
   const { mode } = useContext(UIContext);
@@ -30,6 +34,7 @@ function App() {
           <Route path="/calories" element={<CaloriesPage />} />
           <Route path="test" element={<TestPage />} />
           <Route path="/logout" element={<LogOut />} />
+          <Route path="/weekly-summary" element={<WeeklySummary/>} />
 
         </Routes>
       </BrowserRouter>

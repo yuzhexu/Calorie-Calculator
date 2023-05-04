@@ -35,9 +35,17 @@ export const SignUpPage = () => {
       email,
       password,
     };
-    if (!email || !password || !repeatPassword || password !== repeatPassword) {
+    if (!validateEmail(email) || !validatePassword(password) || !validatePassword(repeatPassword) ) {
       console.error("no credentials or bad credentials were input!");
-    } else {
+      setAlert(
+        "Bad email or weak password (1 lowercase char, 1 uppercase, 1 special symbol, 1 digit, minim 5 chars at least)"
+      );
+    } else if(password !== repeatPassword){
+      console.error("no credentials or bad credentials were input!");
+      setAlert(
+        "Those passwords didn’t match. Try again."
+      );
+    }else {
       if (validateEmail(email) && validatePassword(password)) {
         const url = "http://localhost:4000/signup";
         const resData = await postData(url, userCredentials);
@@ -59,7 +67,7 @@ export const SignUpPage = () => {
         bgcolor: "background.defaultColor",
         p: 0,
         m: -1,
-        height: "100vh",
+        height: "auto",
       }}
     >
       <div className="App">

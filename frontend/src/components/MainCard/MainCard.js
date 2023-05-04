@@ -30,8 +30,12 @@ import { Item } from "./Item";
     saveEditMeal,
     cancelEdit,
     saveMeal,
+    selectedDate, 
+    setSelectedDate
   } = useContext(MealItemsContext);
-
+  const handleDateChange = (e) => {
+    setSelectedDate(new Date(e.target.value));
+  };
   return (
     <Box>
       <Grid container spacing={1} justifyContent="center">
@@ -40,7 +44,14 @@ import { Item } from "./Item";
             <Header />
             {isLoading && <Spinner />}
             {!isLoading && (
-              <>
+              <><label htmlFor="date">Date:</label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+                value={selectedDate.toISOString().substr(0, 10)}
+                onChange={handleDateChange}
+              />
                 <CustomTextField
                   id="mealItem"
                   placeholder="Meal Item"

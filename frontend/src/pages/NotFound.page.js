@@ -15,7 +15,7 @@ export const NotFoundPage = () => {
         bgcolor: "background.defaultColor",
         p: 0,
         m: -1,
-        height: "100vh",
+        height: "auto",
       }}
     >
       <div className="App">

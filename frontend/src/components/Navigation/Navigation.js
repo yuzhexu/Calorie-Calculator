@@ -23,6 +23,8 @@ const pages = [
   { title: "Home", path: "/" },
   { title: "Sign Up", path: "/signup" },
   { title: "Calories", path: "/calories" },
+  { title: "Weekly Summary", path: "/weekly-summary" }, 
+
 ];
 const settings = [
   { title: "Profile", path: "/profile" },

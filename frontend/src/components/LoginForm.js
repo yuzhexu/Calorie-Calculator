@@ -39,10 +39,10 @@ const userCredentials = {
   email,
   password,
 };
-if (!email || !password) {
+if (!validateEmail(email) || !validatePassword(password)) {
   console.error("no credentials were input! X__X");
   setAlert(
-    "Bad email or weak password (1 lowercase char, 1 uppercase, 1 special symbol, 1 digit, minim 5 chars at least)"
+    "Please put a vaild email or password"
   );
 } else {
   if (validateEmail(email) && validatePassword(password)) {

@@ -43,7 +43,7 @@ export function ToggleSwitch() {
         setState({ ...state, checked: false });
       }
     }
-  }, []);
+  }, [setPlaceholder, setState, state]);
   return (
     <FormControl component="fieldset" variant="standard">
       <FormGroup style={switchStyle}>
@@ -57,8 +57,8 @@ export function ToggleSwitch() {
             />
           }
         />
-        {placeholder === "dark" && <span style={emojiStyle}>&#x1F31A;</span>}
-        {placeholder === "light" && <span style={emojiStyle}>&#x1F31E;</span>}
+        {placeholder === "dark" && <span style={emojiStyle}>&#x1F327;</span>}
+        {placeholder === "light" && <span style={emojiStyle}>&#x1F324;</span>}
       </FormGroup>
     </FormControl>
   );
