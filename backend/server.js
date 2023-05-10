@@ -1,3 +1,4 @@
+const path = require("path");
 import express from "express";
 import cors from "cors";
 
@@ -25,3 +26,7 @@ app.use("*", (req, res) => {
 });
 
 app.listen(4000);
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+});
