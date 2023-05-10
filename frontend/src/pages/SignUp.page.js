@@ -67,7 +67,7 @@ export const SignUpPage = () => {
         bgcolor: "background.defaultColor",
         p: 0,
         m: -1,
-        height: "auto",
+        height: "100vh",
       }}
     >
       <div className="App">
